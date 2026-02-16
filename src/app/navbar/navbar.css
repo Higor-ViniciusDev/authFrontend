@@ -1,0 +1,4 @@
+/* Estilos mínimos para o navbar; Tailwind será usado em produção */
+.container { max-width: 1200px; margin: 0 auto; padding-left: 1rem; padding-right: 1rem; }
+
+nav a { text-decoration: none; }

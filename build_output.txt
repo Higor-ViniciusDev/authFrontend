@@ -1,0 +1,19 @@
+﻿[33mÔØ»[39m Building...
+[32mÔ£ö[39m Building...
+[1mInitial chunk files[22m[2m | [22m[1mNames[22m        [2m | [22m [1mRaw size[22m
+[32mchunk-BI5FBS25.js[39m  [2m | [22m[2m-[22m            [2m | [22m  [36m1.33 MB[39m[2m | [22m
+[32mstyles.css[39m         [2m | [22m[2mstyles[22m       [2m | [22m [36m27.36 kB[39m[2m | [22m
+[32mmain.js[39m            [2m | [22m[2mmain[22m         [2m | [22m [36m11.37 kB[39m[2m | [22m
+
+[1m [22m                  [2m | [22m[1mInitial total[22m[2m | [22m  [1m1.37 MB[22m
+
+[1mLazy chunk files[22m   [2m | [22m[1mNames[22m        [2m | [22m [1mRaw size[22m
+[32mchunk-SAETL6NT.js[39m  [2m | [22m[2m-[22m            [2m | [22m[36m153.17 kB[39m[2m | [22m
+[32mchunk-WHH42OFF.js[39m  [2m | [22m[2mlogin[22m        [2m | [22m [36m18.10 kB[39m[2m | [22m
+[32mchunk-2ROTVQDU.js[39m  [2m | [22m[2mforgot[22m       [2m | [22m  [36m8.61 kB[39m[2m | [22m
+[32mchunk-X6DJV4LU.js[39m  [2m | [22m[2mhome[22m         [2m | [22m  [36m3.13 kB[39m[2m | [22m
+
+Application bundle generation complete. [0.988 seconds] - 2026-02-12T00:58:33.061Z
+
+Output location: C:\Users\higor\OneDrive\├ürea de Trabalho\AULAS\2026\auth\frontend\dist\frontend
+

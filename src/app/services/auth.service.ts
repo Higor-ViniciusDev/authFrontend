@@ -3,62 +3,93 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 
-interface LoginResponse {
-    token: string;
+export interface LoginResponse {
+  token?: string;
+  status?: 'active' | 'pending';
+}
+
+export interface RegisterResponse {
+  message: string;
+}
+
+export interface VerifyEmailResponse {
+  message: string;
 }
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-    private readonly http = inject(HttpClient);
-    private readonly router = inject(Router);
-    private readonly API_URL = 'http://localhost:8080';
+  private readonly http = inject(HttpClient);
+  private readonly router = inject(Router);
+  private readonly API_URL = 'http://localhost:8080';
 
-    login(email: string, password: string): Observable<any> {
-        return this.http.post<any>(`${this.API_URL}/validation`, { email, password }).pipe(
-            tap((res) => {
-                if (res.token) {
-                    sessionStorage.setItem('token', res.token);
-                }
-            })
-        );
-    }
+  login(email: string, password: string): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${this.API_URL}/validation`, { email, password }).pipe(
+      tap((res) => {
+        if (res.token) {
+          sessionStorage.setItem('token', res.token);
+        }
+      }),
+    );
+  }
 
-    signup(name: string, email: string, password: string): Observable<any> {
-        return this.http.post(`${this.API_URL}/register`, { name, email, password });
-    }
+  signup(name: string, email: string, password: string): Observable<RegisterResponse> {
+    return this.http.post<RegisterResponse>(`${this.API_URL}/register`, { name, email, password });
+  }
 
-    resendVerification(email: string): Observable<any> {
-        return this.http.post(`${this.API_URL}/resend-verification`, { email });
-    }
+  // GET /verify?token=JWT → backend decodifica JWT, pega UUID, marca verified=true
+  verifyEmail(token: string): Observable<VerifyEmailResponse> {
+    return this.http.get<VerifyEmailResponse>(`${this.API_URL}/verify`, { params: { token } });
+  }
 
-    statusUpdates(email: string): Observable<string> {
-        return new Observable((observer) => {
-            const socket = new WebSocket(`ws://localhost:8080/ws/verify-status?email=${email}`);
+  resendVerification(email: string): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${this.API_URL}/resend-verification`, { email });
+  }
 
-            socket.onmessage = (event) => {
-                const data = JSON.parse(event.data);
-                if (data.status === 'verified') {
-                    observer.next('verified');
-                }
-            };
+  forgotPassword(email: string): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${this.API_URL}/forgot-password`, { email });
+  }
 
-            socket.onerror = (error) => observer.error(error);
-            socket.onclose = () => observer.complete();
+  // WebSocket – aguarda confirmação em tempo real
+  // Backend publica no exchange fan-out após verificar o JWT do link do email
+  statusUpdates(email: string): Observable<'verified'> {
+    return new Observable((observer) => {
+      const socket = new WebSocket(
+        `ws://localhost:8080/ws/verify-status?email=${encodeURIComponent(email)}`,
+      );
 
-            return () => socket.close();
-        });
-    }
+      socket.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          if (data.status === 'verified') {
+            observer.next('verified');
+            observer.complete();
+          }
+        } catch {
+          observer.error(new Error('Mensagem inválida do servidor'));
+        }
+      };
 
-    logout(): void {
-        sessionStorage.removeItem('token');
-        this.router.navigate(['/']);
-    }
+      socket.onerror = (error) => observer.error(error);
+      socket.onclose = () => observer.complete();
 
-    isLoggedIn(): boolean {
-        return !!sessionStorage.getItem('token');
-    }
+      return () => {
+        if (socket.readyState === WebSocket.OPEN) {
+          socket.close();
+        }
+      };
+    });
+  }
 
-    getToken(): string | null {
-        return sessionStorage.getItem('token');
-    }
+  logout(): void {
+    sessionStorage.removeItem('token');
+    this.router.navigate(['/']);
+  }
+
+  isLoggedIn(): boolean {
+    return !!sessionStorage.getItem('token');
+  }
+
+  getToken(): string | null {
+    return sessionStorage.getItem('token');
+  }
 }

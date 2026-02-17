@@ -8,7 +8,7 @@ import { filter, map } from 'rxjs';
   selector: 'app-root',
   imports: [RouterOutlet, NavbarComponent],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrl: './app.css',
 })
 export class App {
   private readonly router = inject(Router);
@@ -16,14 +16,14 @@ export class App {
   private readonly currentUrl = toSignal(
     this.router.events.pipe(
       filter((e): e is NavigationEnd => e instanceof NavigationEnd),
-      map((e) => e.urlAfterRedirects)
+      map((e) => e.urlAfterRedirects),
     ),
-    { initialValue: this.router.url }
+    { initialValue: this.router.url },
   );
 
   protected readonly showNavbar = computed(() => {
     const url = this.currentUrl();
-    const authRoutes = ['/', '/forgot', '/signup', '/verify-email'];
-    return !authRoutes.includes(url);
+    const noNavbarRoutes = ['/', '/forgot', '/signup', '/verify-email', '/verify-callback'];
+    return !noNavbarRoutes.some((route) => url === route || url.startsWith(route + '?'));
   });
 }

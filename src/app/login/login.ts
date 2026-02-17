@@ -9,7 +9,7 @@ import { AuthService } from '../services/auth.service';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './login.html',
-  styleUrls: ['./login.css']
+  styleUrls: ['./login.css'],
 })
 export class LoginComponent {
   private readonly fb = inject(FormBuilder);
@@ -18,7 +18,7 @@ export class LoginComponent {
 
   form: FormGroup = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required]]
+    password: ['', [Validators.required]],
   });
 
   submitted = false;
@@ -31,7 +31,9 @@ export class LoginComponent {
     }
   }
 
-  get f() { return this.form.controls; }
+  get f() {
+    return this.form.controls;
+  }
 
   onSubmit(): void {
     this.submitted = true;
@@ -40,7 +42,6 @@ export class LoginComponent {
     if (this.form.invalid) return;
 
     this.loading.set(true);
-
     const { email, password } = this.form.value;
 
     this.authService.login(email, password).subscribe({
@@ -57,14 +58,13 @@ export class LoginComponent {
         if (err.status === 401) {
           this.errorMessage.set('Email ou senha inválidos.');
         } else if (err.status === 403 && err.error?.status === 'pending') {
-          // Caso o backend retorne 403 Forbidden para contas não verificadas
           this.router.navigate(['/verify-email'], { queryParams: { email } });
         } else if (err.status === 0) {
           this.errorMessage.set('Servidor indisponível. Tente novamente.');
         } else {
           this.errorMessage.set('Ocorreu um erro. Tente novamente.');
         }
-      }
+      },
     });
   }
 }

@@ -1,27 +1,21 @@
 <nav class="bg-white shadow p-4">
   <div class="container mx-auto flex justify-between items-center">
     <div class="flex items-center space-x-4">
-      <a class="font-bold text-xl" routerLink="/home">MeuApp</a>
+      <a class="font-bold text-xl" routerLink="/home">nav bar teste logado</a>
     </div>
     <div>
       @if (isLogged()) {
-        <div class="flex items-center space-x-4">
-          <button
-            class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-400 transition-colors"
-            (click)="logout()"
-          >
-            Sair
-          </button>
-        </div>
+      <div class="flex items-center space-x-4">
+        <button class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-400 transition-colors" (click)="logout()">
+          Sair
+        </button>
+      </div>
       } @else {
-        <div class="flex items-center space-x-4">
-          <a class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-400 transition-colors" routerLink="/"
-            >Entrar</a
-          >
-          <a class="px-3 py-1 border rounded hover:bg-gray-50 transition-colors" routerLink="/signup"
-            >Criar conta</a
-          >
-        </div>
+      <div class="flex items-center space-x-4">
+        <a class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-400 transition-colors"
+          routerLink="/">Entrar</a>
+        <a class="px-3 py-1 border rounded hover:bg-gray-50 transition-colors" routerLink="/signup">Criar conta</a>
+      </div>
       }
     </div>
   </div>

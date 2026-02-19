@@ -20,7 +20,7 @@ export interface VerifyEmailResponse {
 export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly router = inject(Router);
-  private readonly API_URL = 'http://localhost:8080';
+  private readonly API_URL = 'http://34.46.10.239:8080';
 
   login(email: string, password: string): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.API_URL}/validation`, { email, password }).pipe(
